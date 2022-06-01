@@ -13,3 +13,8 @@ $ npm install mongodb
 $ npm list mongodb
 ```
 
+## Install dotenv, for development purposes, don't use for production
+```
+$ npm install dotenv --save
+```
+
