@@ -18,3 +18,7 @@ $ npm list mongodb
 $ npm install dotenv --save
 ```
 
+## Run with
+```
+$ node main.js
+```
