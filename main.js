@@ -12,7 +12,11 @@ async function main() {
     try {
         await client.connect();
 
-        // function calls
+        // *** function calls CRUD + L
+
+
+
+        //List databases
         await listDatabases(client);
 
     } catch (e) {
@@ -24,6 +28,9 @@ async function main() {
 
 main().catch(console.error);
 
+
+
+// List databases
 async function listDatabases(client) {
     const databasesList = await client.db().admin().listDatabases();
 
