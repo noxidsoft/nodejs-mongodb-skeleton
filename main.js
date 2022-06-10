@@ -12,7 +12,7 @@ async function main() {
     try {
         await client.connect();
 
-        //List databases
+        // List databases
         // await listDatabases(client);
 
         // *** function calls CRUD + L
@@ -54,7 +54,14 @@ async function main() {
         // );
 
         // Read one(1) item by name
-        await findOneListingByName(client, "Lovely Loft C");
+        // await findOneListingByName(client, "Lovely Loft C");
+
+        // Read/find many items
+        await findListingsWithMinimumBedroomsAndMostRecentReviews(client, {
+            minimumNumberOfBedrooms: 4,
+            minimumNumberOfBathrooms: 2,
+            maximumNumberOfResults: 5
+        });
 
     } catch (e) {
         console.error(e);
@@ -100,5 +107,38 @@ async function findOneListingByName(client, nameOfListing) {
         console.log(result);
     } else {
         console.log(`No listing found with the name of ${nameOfListing}`);
+    }
+}
+
+// Read/find many items
+async function findListingsWithMinimumBedroomsAndMostRecentReviews(client, {
+    minimumNumberOfBedrooms = 0,
+    minumumNumberOfBathrooms = 0,
+    maximumNumberOfResults = Number.MAX_SAFE_INTEGER
+} = {}) {
+    const cursor = client.db("sample_airbnb").collection("listingsAndReviews").find({
+        bedrooms: { $gte: minimumNumberOfBedrooms },
+        bathrooms: { $gte: minumumNumberOfBathrooms }
+    })
+        .sort({ last_review: -1 })
+        .limit(maximumNumberOfResults);
+
+    const results = await cursor.toArray();
+
+    // Print the results
+    if (results.length > 0) {
+        console.log(`Found listing(s) with at least ${minimumNumberOfBedrooms} bedrooms and ${minumumNumberOfBathrooms} bathrooms:`);
+        results.forEach((result, i) => {
+            const date = new Date(result.last_review).toDateString();
+
+            console.log();
+            console.log(`${i + 1}. name: ${result.name}`);
+            console.log(`   _id: ${result._id}`);
+            console.log(`   bedrooms: ${result.bedrooms}`);
+            console.log(`   bathrooms: ${result.bathrooms}`);
+            console.log(`   most recent review date: ${date}`);
+        });
+    } else {
+        console.log(`No listings found with at least ${minimumNumberOfBedrooms} bedrooms and ${minumumNumberOfBathrooms} bathrooms`);
     }
 }
