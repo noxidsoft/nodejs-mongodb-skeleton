@@ -14,20 +14,44 @@ async function main() {
 
         // *** function calls CRUD + L
 
-
-
-        // Create single record
-        await createListing(client,
-            {
-                name: "Lovely Loft",
-                summary: "A charming loft in central Sydney",
-                bedrooms: 1,
-                bathrooms: 1
-            }
+        // Create multiple records
+        await createMultipleListings(client,
+            [
+                {
+                    name: "Lovely Loft A",
+                    summary: "A charming loft in central Sydney",
+                    bedrooms: 2,
+                    bathrooms: 2
+                },
+                {
+                    name: "Lovely Loft B",
+                    summary: "A charming loft in central Sydney",
+                    bedrooms: 3,
+                    bathrooms: 2
+                },
+                {
+                    name: "Lovely Loft C",
+                    summary: "A charming loft in central Sydney",
+                    bedrooms: 4,
+                    bathrooms: 1,
+                    beds: 7,
+                    last_review: new Date()
+                }
+            ]
         );
 
+        // Create single record
+        // await createListing(client,
+        //     {
+        //         name: "Lovely Loft",
+        //         summary: "A charming loft in central Sydney",
+        //         bedrooms: 1,
+        //         bathrooms: 1
+        //     }
+        // );
+
         //List databases
-        await listDatabases(client);
+        // await listDatabases(client);
 
     } catch (e) {
         console.error(e);
@@ -38,7 +62,13 @@ async function main() {
 
 main().catch(console.error);
 
+// Create multiple records
+async function createMultipleListings(client, newListings) {
+    const results = await client.db("sample_airbnb").collection("listingsAndReviews").insertMany(newListings);
 
+    console.log(`${results.insertedCount} new listings created with the following id(s):`);
+    console.log(results.insertedIds);
+}
 
 // Create single record
 async function createListing(client, newListing) {
