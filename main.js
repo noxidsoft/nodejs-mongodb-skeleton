@@ -53,6 +53,9 @@ async function main() {
         //     ]
         // );
 
+        // Read one(1) item by name
+        await findOneListingByName(client, "Lovely Loft C");
+
     } catch (e) {
         console.error(e);
     } finally {
@@ -88,3 +91,14 @@ async function createMultipleListings(client, newListings) {
     console.log(results.insertedIds);
 }
 
+// Read one(1) item by name - only returns the first item found, even if more exist
+async function findOneListingByName(client, nameOfListing) {
+    const result = await client.db("sample_airbnb").collection("listingsAndReviews").findOne({ name: nameOfListing });
+
+    if (result) {
+        console.log(`Found a listing in the collection with the name ${nameOfListing}`);
+        console.log(result);
+    } else {
+        console.log(`No listing found with the name of ${nameOfListing}`);
+    }
+}
