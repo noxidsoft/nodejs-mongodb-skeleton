@@ -64,9 +64,10 @@ async function main() {
         // });
 
         // Update first listing by name
-        await updateListingByName(client, "Lovely Loft C", {bedrooms: 6, beds: 8});
+        // await updateListingByName(client, "Lovely Loft C", {bedrooms: 6, beds: 8});
 
-
+        // Upsert listing by name
+        await upsertListingByName(client, "Cozy Cottage", {name: "Cozy Cottage", bedrooms: 4, bathrooms: 2});
 
     } catch (e) {
         console.error(e);
@@ -154,4 +155,17 @@ async function updateListingByName(client, nameOfListing, updatedListing) {
 
     console.log(`${result.matchedCount} document(s) matched the query criteria`);
     console.log(`${result.modifiedCount} document(s) was/were updated`);
+}
+
+// Upsert listing by name
+async function upsertListingByName(client, nameOfListing, updatedListing) {
+    const result = await client.db("sample_airbnb").collection("listingsAndReviews").updateOne({name: nameOfListing}, {$set: updatedListing}, {upsert: true});
+
+    console.log(`${result.matchedCount} document(s) matched the query criteria`);
+
+    if(result.upsertedCount > 0) {
+        console.log(`One document was inserted with the id ${result.upsertedId}`);
+    } else {
+        console.log(`${result.modifiedCount} document(s) were/was updated`);
+    }
 }
