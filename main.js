@@ -70,7 +70,10 @@ async function main() {
         // await upsertListingByName(client, "Cozy Cottage", {name: "Cozy Cottage", bedrooms: 4, bathrooms: 2});
 
         // Update all listings so they have a property type
-        await updateAllListingsToHavePropertyType(client);
+        // await updateAllListingsToHavePropertyType(client);
+
+        // Delete listing by name
+        await deleteListingByName(client, "Cozy Cottage");
 
     } catch (e) {
         console.error(e);
@@ -178,4 +181,11 @@ async function updateAllListingsToHavePropertyType(client) {
     const result = await client.db("sample_airbnb").collection("listingsAndReviews").updateMany({property_type: {$exists: false}}, {$set: {property_type: "Unknown" }});
     console.log(`${result.matchedCount} document(s) matched the query criteria.`);
     console.log(`${result.modifiedCount} document(s) was/were updated.`);
+}
+
+// Delete listing by name
+async function deleteListingByName(client, nameOfListing) {
+    const result = await client.db("sample_airbnb").collection("listingsAndReviews").deleteOne({name: nameOfListing});
+
+    console.log(`${result.deletedCount} document(s) was/were deleted`);
 }
