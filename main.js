@@ -73,7 +73,10 @@ async function main() {
         // await updateAllListingsToHavePropertyType(client);
 
         // Delete listing by name
-        await deleteListingByName(client, "Cozy Cottage");
+        // await deleteListingByName(client, "Cozy Cottage");
+
+        // Delete listings scraped before date
+        await deleteListingsScrapedBeforeDate(client, new Date("2019-02-15"));
 
     } catch (e) {
         console.error(e);
@@ -186,6 +189,13 @@ async function updateAllListingsToHavePropertyType(client) {
 // Delete listing by name
 async function deleteListingByName(client, nameOfListing) {
     const result = await client.db("sample_airbnb").collection("listingsAndReviews").deleteOne({name: nameOfListing});
+
+    console.log(`${result.deletedCount} document(s) was/were deleted`);
+}
+
+// Delete listings scraped before date
+async function deleteListingsScrapedBeforeDate(client, date) {
+    const result = await client.db("sample_airbnb").collection('listingsAndReviews').deleteMany({"last_scraped": {$lt: date}});
 
     console.log(`${result.deletedCount} document(s) was/were deleted`);
 }
