@@ -67,7 +67,10 @@ async function main() {
         // await updateListingByName(client, "Lovely Loft C", {bedrooms: 6, beds: 8});
 
         // Upsert listing by name
-        await upsertListingByName(client, "Cozy Cottage", {name: "Cozy Cottage", bedrooms: 4, bathrooms: 2});
+        // await upsertListingByName(client, "Cozy Cottage", {name: "Cozy Cottage", bedrooms: 4, bathrooms: 2});
+
+        // Update all listings so they have a property type
+        await updateAllListingsToHavePropertyType(client);
 
     } catch (e) {
         console.error(e);
@@ -168,4 +171,11 @@ async function upsertListingByName(client, nameOfListing, updatedListing) {
     } else {
         console.log(`${result.modifiedCount} document(s) were/was updated`);
     }
+}
+
+// Update all listings so they have a property type
+async function updateAllListingsToHavePropertyType(client) {
+    const result = await client.db("sample_airbnb").collection("listingsAndReviews").updateMany({property_type: {$exists: false}}, {$set: {property_type: "Unknown" }});
+    console.log(`${result.matchedCount} document(s) matched the query criteria.`);
+    console.log(`${result.modifiedCount} document(s) was/were updated.`);
 }
