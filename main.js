@@ -57,11 +57,16 @@ async function main() {
         // await findOneListingByName(client, "Lovely Loft C");
 
         // Read/find many items
-        await findListingsWithMinimumBedroomsAndMostRecentReviews(client, {
-            minimumNumberOfBedrooms: 4,
-            minimumNumberOfBathrooms: 2,
-            maximumNumberOfResults: 5
-        });
+        // await findListingsWithMinimumBedroomsAndMostRecentReviews(client, {
+        //     minimumNumberOfBedrooms: 4,
+        //     minimumNumberOfBathrooms: 2,
+        //     maximumNumberOfResults: 5
+        // });
+
+        // Update first listing by name
+        await updateListingByName(client, "Lovely Loft C", {bedrooms: 6, beds: 8});
+
+
 
     } catch (e) {
         console.error(e);
@@ -141,4 +146,12 @@ async function findListingsWithMinimumBedroomsAndMostRecentReviews(client, {
     } else {
         console.log(`No listings found with at least ${minimumNumberOfBedrooms} bedrooms and ${minumumNumberOfBathrooms} bathrooms`);
     }
+}
+
+// Update first listing by name
+async function updateListingByName(client, nameOfListing, updatedListing) {
+    const result = await client.db("sample_airbnb").collection("listingsAndReviews").updateOne({name: nameOfListing}, {$set:updatedListing});
+
+    console.log(`${result.matchedCount} document(s) matched the query criteria`);
+    console.log(`${result.modifiedCount} document(s) was/were updated`);
 }
