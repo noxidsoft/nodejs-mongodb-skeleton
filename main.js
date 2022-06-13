@@ -13,7 +13,7 @@ async function main() {
         await client.connect();
 
         // List databases
-        // await listDatabases(client);
+        await listDatabases(client);
 
         // *** function calls CRUD + L
 
@@ -76,7 +76,7 @@ async function main() {
         // await deleteListingByName(client, "Cozy Cottage");
 
         // Delete listings scraped before date
-        await deleteListingsScrapedBeforeDate(client, new Date("2019-02-15"));
+        // await deleteListingsScrapedBeforeDate(client, new Date("2019-02-15"));
 
     } catch (e) {
         console.error(e);
